@@ -6,7 +6,7 @@ import Header from "../../component/Header";
 import ModalAdd_F from "./ModalAdd_F";
 import ModalDelete_F from "./ModalDelete_F";
 import { connect } from "react-redux";
-
+import { createAction } from "@reduxjs/toolkit";
 class Data_firestore extends Component {
   constructor(props) {
     super(props);
@@ -304,7 +304,9 @@ class Data_firestore extends Component {
             <div className="card">
               <header className="card-header navbar is-primary">
                 <div className="card-header-title">
-                  <h4 className="title">React JS + Firestore + Redux</h4>
+                  <h4 className="title">
+                    React JS + Firestore + Redux ToolKit
+                  </h4>
                 </div>
               </header>
 
@@ -569,11 +571,12 @@ class Data_firestore extends Component {
   }
 }
 const MapDispatchToProps = (dispacth) => {
+  const DATA_DELETE_F = createAction("DATA_DELETE_F");
   return {
     //send data for delete checked
     DATADELETE: (data_deletF) =>
       dispacth({
-        type: "DATA_DELETE_F",
+        type: DATA_DELETE_F,
         payload: data_deletF,
       }),
   };

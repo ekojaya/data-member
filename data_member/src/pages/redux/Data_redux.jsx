@@ -5,7 +5,7 @@ import Header from "../../component/Header";
 import { connect } from "react-redux";
 import ModalAdd from "./ModalAdd";
 import ModalDelete from "./ModalDelete";
-
+import { createAction } from "@reduxjs/toolkit";
 class Data_redux extends Component {
   constructor(props) {
     super(props);
@@ -49,16 +49,6 @@ class Data_redux extends Component {
   handleAdd = () => {
     let body = document.getElementById("modal-add");
     body.classList.toggle("is-active");
-  };
-
-  handleDelete = () => {
-    let checkedBoxes = document.querySelectorAll("input[name=chkBox]:checked")
-      .length;
-
-    if (checkedBoxes > 0) {
-      let body = document.getElementById("modal-delete");
-      body.classList.toggle("is-active");
-    }
   };
   getEdit = (id) => {
     let data = this.props.data;
@@ -238,7 +228,7 @@ class Data_redux extends Component {
             <div className="card">
               <header className="card-header navbar is-primary">
                 <div className="card-header-title">
-                  <h4 className="title">React JS + Redux</h4>
+                  <h4 className="title">React JS + Redux ToolKit </h4>
                 </div>
               </header>
 
@@ -282,13 +272,6 @@ class Data_redux extends Component {
                   >
                     <thead>
                       <tr>
-                        <th style={{ width: "7%" }}>
-                          <input
-                            type="checkbox"
-                            onChange={this.handleAllChecked}
-                          />{" "}
-                          ALL
-                        </th>
                         <th onClick={this.onSort("id")}>
                           # ID
                           <span className={this.setArrow("id")}>{"  "}</span>
@@ -315,16 +298,6 @@ class Data_redux extends Component {
                       {filteredContacts.map((newdata, index) => {
                         return (
                           <tr key={index}>
-                            <td>
-                              <input
-                                type="checkbox"
-                                key={newdata.id}
-                                onChange={this.handleCheck}
-                                checked={newdata.IsChecked}
-                                value={newdata.id}
-                                name="chkBox"
-                              />
-                            </td>
                             <td>{newdata.id}</td>
                             <td>{newdata.name}</td>
                             <td>{newdata.country}</td>
@@ -356,16 +329,6 @@ class Data_redux extends Component {
                   </table>{" "}
                 </div>
                 {/* <div className="has-text-centered content"> */}
-                <div className="field is-grouped">
-                  <div className="control">
-                    <button
-                      className="button is-link is-danger"
-                      onClick={this.handleDelete}
-                    >
-                      <Icon.Trash size="20" /> <span> Delete</span>
-                    </button>
-                  </div>
-                </div>
               </div>
             </div>
 
@@ -392,22 +355,24 @@ class Data_redux extends Component {
                     <span style={{ color: "red" }}>{this.state.name}</span>?
                   </section>
                   <footer className="modal-card-foot">
-                    <button
-                      className="button is-link is-danger"
-                      onClick={this.handleRemove}
-                    >
-                      Delete
-                    </button>
-                    <button
-                      className="button is-link is-light"
-                      onClick={(e) => {
-                        e.preventDefault();
-                        let body = document.getElementById("modal-del");
-                        body.classList.remove("is-active");
-                      }}
-                    >
-                      Cancel
-                    </button>
+                    <form onSubmit={this.handleRemove}>
+                      <button
+                        className="button is-link is-danger"
+                        // onClick={this.handleRemove}
+                      >
+                        Delete
+                      </button>
+                      <button
+                        className="button is-link is-light"
+                        onClick={(e) => {
+                          e.preventDefault();
+                          let body = document.getElementById("modal-del");
+                          body.classList.remove("is-active");
+                        }}
+                      >
+                        Cancel
+                      </button>
+                    </form>
                   </footer>
                 </div>
               </div>
@@ -508,15 +473,17 @@ const MapStateToProps = (state) => {
   };
 };
 const MApDispatchToProps = (dispatch) => {
+  const UPDATE_DATA = createAction("UPDATE_DATA");
+  const REMOVE_DATA = createAction("REMOVE_DATA");
   return {
     UPDATEDATA: (formdata) =>
       dispatch({
-        type: "UPDATE_DATA",
+        type: UPDATE_DATA,
         payload: formdata,
       }),
     REMOVEDATA: (id) =>
       dispatch({
-        type: "REMOVE_DATA",
+        type: REMOVE_DATA,
         payload: id,
       }),
   };

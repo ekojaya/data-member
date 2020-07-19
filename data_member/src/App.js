@@ -12,7 +12,7 @@ class App extends Component {
           <Switch>
             <Route exact path="/redux" component={Data_redux} />
             <Route exact path="/firestore" component={Data_firestore} />
-            <Route exact path="/" component={Data_redux} />
+            <Route exact path="/" component={Data_firestore} />
           </Switch>
         </Router>
       </div>
