@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import dataBase from "../../FirestoreConfig";
-
+import { actions } from "../../store/SliceFireStore";
 class ModalDelete_F extends Component {
   constructor(props) {
     super(props);
@@ -15,39 +15,52 @@ class ModalDelete_F extends Component {
       IsChecked: "",
       datas: [],
       errors: {},
+      isLoading: false,
     };
   }
 
-  getData = () => {
-    dataBase.collection("data").onSnapshot(
-      (snapShot) => {
-        this.setState({
-          datas: snapShot.docs.map((doc) => {
-            // console.log(doc.data().name);
+  // getData = () => {
+  //   dataBase.collection("data").onSnapshot(
+  //     (snapShot) => {
+  //       this.setState({
+  //         datas: snapShot.docs.map((doc) => {
+  //           // console.log(doc.data().name);
 
-            return {
-              id: doc.id,
-              name: doc.data().name,
-              country: doc.data().country,
-              birth: doc.data().birth,
-              created_at: doc.data().created_at,
-              IsChecked: false,
-            };
-          }),
-        });
-      },
-      (error) => {
-        console.log(error);
-      }
-    );
-  };
+  //           return {
+  //             id: doc.id,
+  //             name: doc.data().name,
+  //             country: doc.data().country,
+  //             birth: doc.data().birth,
+  //             created_at: doc.data().created_at,
+  //             IsChecked: false,
+  //           };
+  //         }),
+  //       });
+  //     },
+  //     (error) => {
+  //       console.log(error);
+  //     }
+  //   );
+  // };
+
+  componentWillMount() {
+    console.log("component will mount");
+  }
+  componentWillReceiveProps({ datas }) {
+    this.setState({
+      datas,
+    });
+  }
 
   componentDidMount() {
-    this.getData();
+    // this.getData();
+    this.props.GET_DATA();
   }
 
   handleRemove = () => {
+    this.setState({ isLoading: true });
     let datas = this.state.datas;
+    console.log(datas);
     let datadelete = this.props.data;
     {
       datas.map((data) => {
@@ -112,8 +125,17 @@ class ModalDelete_F extends Component {
 
 const MapStateToProps = (state) => {
   return {
-    data: state.dataDelete,
+    data: state.data.dataDelete,
+    datas: state.datas.datas,
   };
 };
+const MapDispatchToProps = (dispatch) => {
+  return {
+    GET_DATA: () => dispatch(actions.getData()),
+    // ADD_DATA: ({ name, country, birth }) =>
+    //   dispatch(actions.addData({ name, country, birth })),
+  };
+};
+export default connect(MapStateToProps, MapDispatchToProps)(ModalDelete_F);
 
-export default connect(MapStateToProps)(ModalDelete_F);
+// export default connect(MapStateToProps)(ModalDelete_F);

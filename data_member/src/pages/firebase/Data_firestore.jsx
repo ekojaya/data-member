@@ -7,6 +7,7 @@ import ModalAdd_F from "./ModalAdd_F";
 import ModalDelete_F from "./ModalDelete_F";
 import { connect } from "react-redux";
 import { createAction } from "@reduxjs/toolkit";
+import { DATA_DELETE_F } from "../../store/SliceData";
 class Data_firestore extends Component {
   constructor(props) {
     super(props);
@@ -25,6 +26,7 @@ class Data_firestore extends Component {
         column: null,
         direction: "desc",
       },
+      isLoading: false,
     };
   }
 
@@ -54,6 +56,8 @@ class Data_firestore extends Component {
     body.classList.toggle("is-active");
   };
   handleDelete = () => {
+    this.getData();
+    this.setState({ isLoading: true });
     let checkedBoxes = document.querySelectorAll("input[name=chkBox]:checked")
       .length;
 
@@ -222,21 +226,18 @@ class Data_firestore extends Component {
   HandleUpdate = () => {
     const { id, name, country, birth, created_at } = this.state;
 
-    dataBase
-      .collection("data")
-      .doc(id)
-      .update({
-        name,
-        country,
-        birth,
-        created_at,
-      })
-      .then(() => {
-        console.log("berhasil");
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+    dataBase.collection("data").doc(id).update({
+      name,
+      country,
+      birth,
+      created_at,
+    });
+    // .then(() => {
+    //   console.log("berhasil");
+    // })
+    // .catch((err) => {
+    //   console.log(err);
+    // });
 
     let body = document.getElementById("modal-upd-f");
     body.classList.remove("is-active");
@@ -570,12 +571,12 @@ class Data_firestore extends Component {
     );
   }
 }
-const MapDispatchToProps = (dispacth) => {
-  const DATA_DELETE_F = createAction("DATA_DELETE_F");
+const MapDispatchToProps = (dispatch) => {
+  // const DATA_DELETE_F = createAction("DATA_DELETE_F");
   return {
     //send data for delete checked
     DATADELETE: (data_deletF) =>
-      dispacth({
+      dispatch({
         type: DATA_DELETE_F,
         payload: data_deletF,
       }),

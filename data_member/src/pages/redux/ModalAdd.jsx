@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import { connect } from "react-redux";
 import bulma from "bulma";
 import { createAction } from "@reduxjs/toolkit";
+import { ADD_DATA } from "../../store/SliceData";
 class ModalAdd extends Component {
   constructor(props) {
     super(props);
@@ -93,64 +94,64 @@ class ModalAdd extends Component {
               />
             </header>
             <section className="modal-card-body">
-              <form onSubmit={this.onSubmit}>
-                <div className="field">
-                  <label className="label">Name</label>
-                  <div className="control">
-                    <input
-                      className="input"
-                      placeholder="Name"
-                      defaultValue={""}
-                      name="name"
-                      value={this.state.name}
-                      onChange={this.handleInput}
-                    />
-                    <span style={{ color: "red" }}>
-                      {this.state.errors["name"]}
-                    </span>
-                  </div>
+              {/* <form onSubmit={this.onSubmit}> */}
+              <div className="field">
+                <label className="label">Name</label>
+                <div className="control">
+                  <input
+                    className="input"
+                    placeholder="Name"
+                    defaultValue={""}
+                    name="name"
+                    value={this.state.name}
+                    onChange={this.handleInput}
+                  />
+                  <span style={{ color: "red" }}>
+                    {this.state.errors["name"]}
+                  </span>
                 </div>
-                <div className="field">
-                  <label className="label">Country</label>
-                  <div className="control">
-                    <input
-                      className="input"
-                      placeholder="Country"
-                      defaultValue={""}
-                      name="country"
-                      value={this.state.country}
-                      onChange={this.handleInput}
-                    />
-                    <span style={{ color: "red" }}>
-                      {this.state.errors["country"]}
-                    </span>
-                  </div>
+              </div>
+              <div className="field">
+                <label className="label">Country</label>
+                <div className="control">
+                  <input
+                    className="input"
+                    placeholder="Country"
+                    defaultValue={""}
+                    name="country"
+                    value={this.state.country}
+                    onChange={this.handleInput}
+                  />
+                  <span style={{ color: "red" }}>
+                    {this.state.errors["country"]}
+                  </span>
                 </div>
+              </div>
 
-                <div className="field">
-                  <label className="label">Birth</label>
-                  <div className="control">
-                    <input
-                      className="input"
-                      value={this.state.birth}
-                      type="date"
-                      name="birth"
-                      onChange={this.handleInput}
-                    />
-                    <span style={{ color: "red" }}>
-                      {this.state.errors["birth"]}
-                    </span>
-                  </div>
+              <div className="field">
+                <label className="label">Birth</label>
+                <div className="control">
+                  <input
+                    className="input"
+                    value={this.state.birth}
+                    type="date"
+                    name="birth"
+                    onChange={this.handleInput}
+                  />
+                  <span style={{ color: "red" }}>
+                    {this.state.errors["birth"]}
+                  </span>
                 </div>
-                <div>
-                  <button
-                    className="button is-link is-primary"
-                    // onClick={this.onSubmit}
-                  >
-                    add
-                  </button>
-                </div>
-              </form>
+              </div>
+              <div>
+                <button
+                  className="button is-link is-primary"
+                  onClick={this.onSubmit}
+                >
+                  add
+                </button>
+              </div>
+              {/* </form> */}
             </section>
           </div>
         </div>
@@ -158,11 +159,11 @@ class ModalAdd extends Component {
     );
   }
 }
-const MapDispatchToProps = (dispacth) => {
-  const ADD_DATA = createAction("ADD_DATA");
+const MapDispatchToProps = (dispatch) => {
+  // const ADD_DATA = createAction("ADD_DATA");
   return {
     AddData: (formdata) =>
-      dispacth({
+      dispatch({
         type: ADD_DATA,
         payload: formdata,
       }),
@@ -171,7 +172,7 @@ const MapDispatchToProps = (dispacth) => {
 
 const MapStateToProps = (state) => {
   return {
-    data: state.data,
+    data: state.data.data,
   };
 };
 export default connect(MapStateToProps, MapDispatchToProps)(ModalAdd);

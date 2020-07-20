@@ -1,7 +1,9 @@
 import React, { Component } from "react";
+import { connect } from "react-redux";
 import dataBase from "../../FirestoreConfig";
+import { actions } from "../../store/SliceFireStore";
 import bulma from "bulma";
-export default class ModalAdd_F extends Component {
+class ModalAdd_F extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -9,9 +11,17 @@ export default class ModalAdd_F extends Component {
       country: "",
       birth: "",
       errors: {},
+      isLoading: false,
     };
   }
-
+  componentWillMount() {
+    console.log("component will mount");
+  }
+  componentWillReceiveProps({ datas }) {
+    this.setState({
+      datas,
+    });
+  }
   handleInput = (e) => {
     const value = e.target.value;
     const name = e.target.name;
@@ -43,6 +53,7 @@ export default class ModalAdd_F extends Component {
 
   // submit data
   onSubmit = () => {
+    this.setState({ isLoading: !this.state.isLoading });
     var created_at = new Date()
       .toLocaleString("en-us", {
         year: "numeric",
@@ -54,26 +65,25 @@ export default class ModalAdd_F extends Component {
     //validation
     if (this.handleValidation()) {
       const { name, country, birth } = this.state;
-      dataBase
-        .collection("data")
-        .add({
-          name,
-          country,
-          birth,
-          created_at,
-        })
-        .then(() => {
-          console.log("berhasil");
-        })
-        .catch(() => {
-          console.log("gagal");
-        });
+      dataBase.collection("data").add({
+        name,
+        country,
+        birth,
+        created_at,
+      });
+      // .then(() => {
+      //   console.log("berhasil");
+      // })
+      // .catch(() => {
+      //   console.log("gagal");
+      // });
 
       let body = document.getElementById("modal-add-f");
       body.classList.remove("is-active");
     }
 
     this.setState({ name: "", country: "", birth: "" });
+    this.props.GET_DATA();
   };
 
   render() {
@@ -160,3 +170,17 @@ export default class ModalAdd_F extends Component {
     );
   }
 }
+const MapStateToProps = (state) => {
+  return {
+    data: state.data.dataDelete,
+    datas: state.datas.datas,
+  };
+};
+const MapDispatchToProps = (dispatch) => {
+  return {
+    GET_DATA: () => dispatch(actions.getData()),
+    // ADD_DATA: ({ name, country, birth }) =>
+    //   dispatch(actions.addData({ name, country, birth })),
+  };
+};
+export default connect(MapStateToProps, MapDispatchToProps)(ModalAdd_F);

@@ -4,6 +4,7 @@ const ADD_DATA = createAction("ADD_DATA");
 const REMOVE_DATA = createAction("REMOVE_DATA");
 const UPDATE_DATA = createAction("UPDATE_DATA");
 const DATA_DELETE_F = createAction("DATA_DELETE_F");
+
 const initialState = {
   data: [
     {

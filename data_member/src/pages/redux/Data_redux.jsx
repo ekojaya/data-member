@@ -6,6 +6,7 @@ import { connect } from "react-redux";
 import ModalAdd from "./ModalAdd";
 import ModalDelete from "./ModalDelete";
 import { createAction } from "@reduxjs/toolkit";
+import { REMOVE_DATA, UPDATE_DATA } from "../../store/SliceData";
 class Data_redux extends Component {
   constructor(props) {
     super(props);
@@ -469,12 +470,12 @@ class Data_redux extends Component {
 }
 const MapStateToProps = (state) => {
   return {
-    data: state.data,
+    data: state.data.data,
   };
 };
 const MApDispatchToProps = (dispatch) => {
-  const UPDATE_DATA = createAction("UPDATE_DATA");
-  const REMOVE_DATA = createAction("REMOVE_DATA");
+  // const UPDATE_DATA = createAction("UPDATE_DATA");
+  // const REMOVE_DATA = createAction("REMOVE_DATA");
   return {
     UPDATEDATA: (formdata) =>
       dispatch({

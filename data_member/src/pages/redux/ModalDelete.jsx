@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import { createAction } from "@reduxjs/toolkit";
+import { REMOVE_DATA } from "../../store/SliceData";
 class ModalDelete extends Component {
   handleRemove = () => {
     let data = this.props.data;
@@ -62,11 +63,11 @@ class ModalDelete extends Component {
 }
 const MapStateToProps = (state) => {
   return {
-    data: state.data,
+    data: state.data.data,
   };
 };
 const MapDispatchToProps = (dispatch) => {
-  const REMOVE_DATA = createAction("REMOVE_DATA");
+  // const REMOVE_DATA = createAction("REMOVE_DATA");
   return {
     REMOVEDATA: (dataID) =>
       dispatch({
