@@ -51,40 +51,57 @@ class ModalAdd_F extends Component {
     return formIsValid;
   }
 
-  // submit data
   onSubmit = () => {
-    this.setState({ isLoading: !this.state.isLoading });
-    var created_at = new Date()
-      .toLocaleString("en-us", {
-        year: "numeric",
-        month: "2-digit",
-        day: "2-digit",
-      })
-      .replace(/(\d+)\/(\d+)\/(\d+)/, "$3-$1-$2");
+    this.setState({ isLoading: true });
+    const { name, country, birth } = this.state;
+    this.props.ADD_DATA({ name, country, birth });
 
-    //validation
-    if (this.handleValidation()) {
-      const { name, country, birth } = this.state;
-      dataBase.collection("data").add({
-        name,
-        country,
-        birth,
-        created_at,
-      });
-      // .then(() => {
-      //   console.log("berhasil");
-      // })
-      // .catch(() => {
-      //   console.log("gagal");
-      // });
+    this.setState({
+      name: "",
+      country: "",
+      birth: "",
+    });
 
-      let body = document.getElementById("modal-add-f");
-      body.classList.remove("is-active");
-    }
-
-    this.setState({ name: "", country: "", birth: "" });
     this.props.GET_DATA();
+
+    let body = document.getElementById("modal-add-f");
+    body.classList.remove("is-active");
   };
+
+  // // submit data
+  // onSubmit = () => {
+  //   this.setState({ isLoading: !this.state.isLoading });
+  //   var created_at = new Date()
+  //     .toLocaleString("en-us", {
+  //       year: "numeric",
+  //       month: "2-digit",
+  //       day: "2-digit",
+  //     })
+  //     .replace(/(\d+)\/(\d+)\/(\d+)/, "$3-$1-$2");
+
+  //   //validation
+  //   if (this.handleValidation()) {
+  //     const { name, country, birth } = this.state;
+  //     dataBase.collection("data").add({
+  //       name,
+  //       country,
+  //       birth,
+  //       created_at,
+  //     });
+  //     // .then(() => {
+  //     //   console.log("berhasil");
+  //     // })
+  //     // .catch(() => {
+  //     //   console.log("gagal");
+  //     // });
+
+  //     let body = document.getElementById("modal-add-f");
+  //     body.classList.remove("is-active");
+  //   }
+
+  //   this.setState({ name: "", country: "", birth: "" });
+  //   this.props.GET_DATA();
+  // };
 
   render() {
     return (
@@ -179,8 +196,8 @@ const MapStateToProps = (state) => {
 const MapDispatchToProps = (dispatch) => {
   return {
     GET_DATA: () => dispatch(actions.getData()),
-    // ADD_DATA: ({ name, country, birth }) =>
-    //   dispatch(actions.addData({ name, country, birth })),
+    ADD_DATA: ({ name, country, birth }) =>
+      dispatch(actions.addData({ name, country, birth })),
   };
 };
 export default connect(MapStateToProps, MapDispatchToProps)(ModalAdd_F);

@@ -51,12 +51,13 @@ export const addData = createAsyncThunk(
 
 export const updateData = createAsyncThunk(
   "/",
-  async ({ name, country, birth, id }, { rejectWithValue }) => {
+  async ({ name, country, birth, id, created_at }, { rejectWithValue }) => {
     try {
       dataBase.collection("data").doc(id).update({
         name,
         country,
         birth,
+        created_at,
       });
     } catch (err) {
       console.log(err);
@@ -67,7 +68,7 @@ export const updateData = createAsyncThunk(
 
 export const removeData = createAsyncThunk(
   "/",
-  async ({ id }, { rejectWithValue }) => {
+  async (id, { rejectWithValue }) => {
     try {
       dataBase.collection("data").doc(id).delete();
     } catch (err) {

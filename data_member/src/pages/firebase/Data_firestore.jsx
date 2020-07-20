@@ -8,6 +8,8 @@ import ModalDelete_F from "./ModalDelete_F";
 import { connect } from "react-redux";
 import { createAction } from "@reduxjs/toolkit";
 import { DATA_DELETE_F } from "../../store/SliceData";
+import { actions } from "../../store/SliceFireStore";
+
 class Data_firestore extends Component {
   constructor(props) {
     super(props);
@@ -170,6 +172,15 @@ class Data_firestore extends Component {
     return className;
   };
 
+  // componentWillMount() {
+  //   console.log("component will mount");
+  // }
+  // componentWillReceiveProps({ datas }) {
+  //   this.setState({
+  //     datas,
+  //   });
+  // }
+
   getData = () => {
     dataBase.collection("data").onSnapshot(
       (snapShot) => {
@@ -196,6 +207,7 @@ class Data_firestore extends Component {
 
   componentDidMount() {
     this.getData();
+    // this.props.GET_DATA();
   }
 
   getEdit = (id) => {
@@ -225,32 +237,10 @@ class Data_firestore extends Component {
   };
   HandleUpdate = () => {
     const { id, name, country, birth, created_at } = this.state;
-
-    dataBase.collection("data").doc(id).update({
-      name,
-      country,
-      birth,
-      created_at,
-    });
-    // .then(() => {
-    //   console.log("berhasil");
-    // })
-    // .catch((err) => {
-    //   console.log(err);
-    // });
-
+    this.props.UPDATE_DATA({ id, name, country, birth, created_at });
+    this.getData();
     let body = document.getElementById("modal-upd-f");
     body.classList.remove("is-active");
-
-    this.setState({
-      name: "",
-      id: "",
-      edit: false,
-      IsChecked: false,
-      country: "",
-      birth: "",
-      created_at: "",
-    });
   };
   getDelete = (id) => {
     let data = this.state.datas;
@@ -260,11 +250,6 @@ class Data_firestore extends Component {
         if (data1.id === id) {
           this.setState({
             id: data1.id,
-            created_at: data1.created_at,
-            name: data1.name,
-            country: data1.country,
-            birth: data1.birth,
-            IsChecked: false,
           });
           let body = document.getElementById("modal-del-f");
           body.classList.toggle("is-active");
@@ -275,16 +260,10 @@ class Data_firestore extends Component {
 
   handleRemove = () => {
     let id = this.state.id;
-    dataBase.collection("data").doc(id).delete();
+    this.props.REMOVE_DATA(id);
+    this.getData();
     let body = document.getElementById("modal-del-f");
     body.classList.remove("is-active");
-
-    // .then(() => {
-    //   console.log("berhasil");
-    // })
-    // .catch((err) => {
-    //   console.log(err);
-    // });
   };
 
   render() {
@@ -571,9 +550,20 @@ class Data_firestore extends Component {
     );
   }
 }
+const MapStateToProps = (state) => {
+  return {
+    data: state.data.dataDelete,
+    datas: state.datas.datas,
+  };
+};
+
 const MapDispatchToProps = (dispatch) => {
   // const DATA_DELETE_F = createAction("DATA_DELETE_F");
   return {
+    GET_DATA: () => dispatch(actions.getData()),
+    REMOVE_DATA: (id) => dispatch(actions.removeData(id)),
+    UPDATE_DATA: ({ id, name, country, birth, created_at }) =>
+      dispatch(actions.updateData({ id, name, country, birth, created_at })),
     //send data for delete checked
     DATADELETE: (data_deletF) =>
       dispatch({
@@ -583,4 +573,4 @@ const MapDispatchToProps = (dispatch) => {
   };
 };
 
-export default connect(null, MapDispatchToProps)(Data_firestore);
+export default connect(MapStateToProps, MapDispatchToProps)(Data_firestore);
